@@ -1,0 +1,33 @@
+version: '3'
+services:
+  dump1090:
+    build: ./dump1090
+    devices:
+      - /dev/bus/usb
+    expose:
+      - 80
+      - 30001
+      - 30002
+      - 30003
+      - 30004
+      - 30005
+      - 30104
+    image: egortensin/dump1090
+    ports:
+      - 8080:80
+    restart: always
+    volumes:
+      - './dump1090/config.js:/usr/share/dump1090-fa/html/config.js:ro'
+      - './dump1090/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:ro'
+  fr24feed:
+    build: ./fr24feed
+    depends_on:
+      - dump1090
+    expose:
+      - 8754
+    image: egortensin/fr24feed
+    ports:
+      - 8754:8754
+    restart: always
+    volumes:
+      - './fr24feed/fr24feed.ini:/etc/fr24feed.ini:ro'
