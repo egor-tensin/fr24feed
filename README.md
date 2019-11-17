@@ -30,7 +30,7 @@ the receiver in dump1090-fa's arguments (`--lat` and `--lon`).
 
 Start the containers using
 
-    docker-compose up -d
+    docker-compose pull && docker-compose up -d
 
 You can now access the interactive map at http://0.0.0.0:8080/dump1090-fa/ and
 the fr24feed web interface at http://0.0.0.0:8754/.
