@@ -5,13 +5,12 @@ LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 # Don't prompt:
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -yq && apt-get dist-upgrade -yq
-
-# Install dependencies (from README at https://github.com/flightaware/dump1090):
-RUN apt-get install -yq build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev
-
-# Install Supervisor to run both lighttpd and dump1090:
-RUN apt-get install -yq supervisor
+RUN apt-get update -yq \
+    && apt-get install -yq --no-install-recommends \
+        # dump1090 dependencies (from README at https://github.com/flightaware/dump1090):
+        build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev \
+        # Supervisor to run both lighttpd and dump1090:
+        supervisor
 
 # Build and install the dump1090-fa package:
 WORKDIR /tmp
