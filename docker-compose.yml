@@ -13,6 +13,8 @@ services:
       - 30005
       - 30104
     image: egortensin/dump1090
+    logging:
+      driver: journald
     ports:
       - 8080:80
     restart: always
@@ -26,6 +28,8 @@ services:
     expose:
       - 8754
     image: egortensin/fr24feed
+    logging:
+      driver: journald
     ports:
       - 8754:8754
     restart: always
