@@ -2,17 +2,17 @@ FROM debian:stretch-slim
 
 LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 
-# Build and install the dump1090-fa package:
 WORKDIR /tmp
 
 # Variables:
 ARG DUMP1090_VERSION=3.7.2
 ARG DUMP1090_ARCH=armhf
 
-ADD ["https://github.com/flightaware/dump1090/archive/v${DUMP1090_VERSION}.tar.gz", "./dump1090-${DUMP1090_VERSION}.tar.gz"]
-
 # Don't prompt:
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Build and install the dump1090-fa package:
+ADD ["https://github.com/flightaware/dump1090/archive/v${DUMP1090_VERSION}.tar.gz", "./dump1090-${DUMP1090_VERSION}.tar.gz"]
 
     # dump1090 dependencies (from README at https://github.com/flightaware/dump1090):
 RUN build_deps='build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev' && \
