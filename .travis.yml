@@ -1,7 +1,10 @@
+# docker-compose is missing on arm64, have to install it manually.
+# language: python seems to force arch: amd64, which is not what I want.
 language: minimal
 os: linux
 dist: bionic
 arch: arm64
+# Dunno why cache: pip doesn't simply work.
 cache:
   directories:
     - "$HOME/.cache/pip"
