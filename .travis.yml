@@ -2,6 +2,9 @@ language: minimal
 os: linux
 dist: bionic
 arch: arm64
+cache:
+  directories:
+    - "$HOME/.cache/pip"
 addons:
   apt:
     update: true
@@ -12,6 +15,5 @@ addons:
       - python3-wheel
 services:
   - docker
-install:
-  - pip3 install -IU docker-compose
+install: pip3 install -IU docker-compose
 script: docker-compose build
