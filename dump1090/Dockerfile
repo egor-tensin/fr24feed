@@ -6,7 +6,6 @@ WORKDIR /tmp
 
 # Variables:
 ARG DUMP1090_VERSION=3.7.2
-ARG DUMP1090_ARCH=armhf
 
 # Don't prompt:
 ENV DEBIAN_FRONTEND=noninteractive
@@ -27,7 +26,8 @@ RUN build_deps='build-essential debhelper librtlsdr-dev pkg-config dh-systemd li
     dpkg-buildpackage -b && \
     dpkg-buildpackage -Tclean && \
     cd -- .. && \
-    apt-get install -yq ./dump1090-fa_${DUMP1090_VERSION}_${DUMP1090_ARCH}.deb && \
+    dump1090_arch="$( dpkg --print-architecture )" && \
+    apt-get install -yq ./dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb && \
     rm -rf -- dump1090-${DUMP1090_VERSION}.tar.gz dump1090-${DUMP1090_VERSION}/ && \
     find . -mindepth 1 -maxdepth 1 -type f -\( -name '*.buildinfo' -o -name '*.changes' -o -name '*.deb' -\) -delete && \
     apt-get purge -yq --auto-remove -o APT::AutoRemove::RecommendsImportant=false $build_deps
