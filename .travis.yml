@@ -1,15 +1,8 @@
-# docker-compose is missing on arm64, have to install it manually.
-language: python
-python: '3.7'
+language: minimal
 os: linux
 dist: bionic
 arch: arm64
-cache: pip
-env:
-  DOCKER_COMPOSE_VERSION: '1.25.1'
 services:
   - docker
-install:
-  - pip3 install -IU "docker-compose==$DOCKER_COMPOSE_VERSION"
 script:
   - docker-compose build
