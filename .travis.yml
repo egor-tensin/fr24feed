@@ -1,13 +1,40 @@
+# I used this guide to set up multiarch builds:
+# https://mirailabs.io/blog/multiarch-docker-with-buildx/
+# I don't understand it completely at the moment, but whatever.
+
+# TODO: Docker Hub automated builds instead of Travis?
+# TODO: docker-compose instead of docker buildx?
+
 language: minimal
 os: linux
 dist: bionic
-arch: arm64
+
 services:
   - docker
+
+addons:
+  apt:
+    update: true
+    # Newer docker for buildx support:
+    sources:
+      - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
+        sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
+    packages:
+      - docker-ce
+
+env:
+  # Enable experimental buildx support
+  DOCKER_CLI_EXPERIMENTAL: enabled
+  platforms: linux/i386,linux/amd64,linux/armhf
+
 script:
-  - docker-compose build
-deploy:
-  provider: script
-  on:
-    branch: master
-  script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker-compose push
+  - docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
+  - docker buildx create --use
+  - docker buildx build --platform "$platforms" dump1090/
+  - docker buildx build --platform "$platforms" fr24feed/
+  - |-
+    if [ "$TRAVIS_BRANCH" = master ]; then
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    docker buildx build --platform "$platforms" -t "$DOCKER_USERNAME/dump1090" --push dump1090/
+    docker buildx build --platform "$platforms" -t "$DOCKER_USERNAME/fr24feed" --push fr24feed/
+    fi
