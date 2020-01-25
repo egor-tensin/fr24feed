@@ -6,3 +6,8 @@ services:
   - docker
 script:
   - docker-compose build
+deploy:
+  provider: script
+  on:
+    branch: master
+  script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker-compose push
