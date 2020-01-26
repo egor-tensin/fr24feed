@@ -1,6 +1,24 @@
-# I used this guide to set up multiarch builds:
-# https://mirailabs.io/blog/multiarch-docker-with-buildx/
+# I used a guide to set up multiarch builds [1].
 # I don't understand it completely at the moment, but whatever.
+
+# The goal is to have a single multiarch repo on Docker Hub for each of the
+# services.
+# The approach is to use Docker's new BuildKit builder + the buildx command
+# line plugin.
+#
+# Other possibilities are:
+# * use QEMU + multiarch base images directly [2][3], and create a manifest
+# file manually,
+# * build natively on multiple architectures (not sure how to combine them in
+# a single manifest then though).
+#
+# The disadvantages of the approach taken are:
+# * newer Docker version is required,
+# * docker-compose doesn't seem to support that method natively.
+#
+# [1]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
+# [2]: https://lobradov.github.io/Building-docker-multiarch-images/
+# [3]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
 
 # TODO: Docker Hub automated builds instead of Travis?
 # TODO: docker-compose instead of docker buildx?

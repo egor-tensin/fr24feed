@@ -4,6 +4,7 @@ FROM debian:stretch-slim AS base
 
 # Those are weird hacks, but the alternative (using the apt repository) was
 # unsuitable (no systemctl, etc.).
+# Using BuildKit is required for this to work (it exposes TARGETARCH).
 
 # The latest versions of the fr24feed binary for i386/x86_64/armhf as of
 # 2020-01-26, according to https://www.flightradar24.com/share-your-data.
