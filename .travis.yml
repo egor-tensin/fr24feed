@@ -1,28 +1,3 @@
-# I used a guide to set up multiarch builds [1].
-# I don't understand it completely at the moment, but whatever.
-
-# The goal is to have a single multiarch repo on Docker Hub for each of the
-# services.
-# The approach is to use Docker's new BuildKit builder + the buildx command
-# line plugin.
-#
-# Other possibilities are:
-# * use QEMU + multiarch base images directly [2][3], and create a manifest
-# file manually,
-# * build natively on multiple architectures (not sure how to combine them in
-# a single manifest then though).
-#
-# The disadvantages of the approach taken are:
-# * newer Docker version is required,
-# * docker-compose doesn't seem to support that method natively.
-#
-# [1]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
-# [2]: https://lobradov.github.io/Building-docker-multiarch-images/
-# [3]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
-
-# TODO: Docker Hub automated builds instead of Travis?
-# TODO: docker-compose instead of docker buildx?
-
 language: minimal
 os: linux
 dist: bionic
@@ -33,26 +8,29 @@ services:
 addons:
   apt:
     update: true
-    # Newer docker for buildx support:
+    # Newer docker for BuildKit/buildx support:
     sources:
       - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
         sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
     packages:
       - docker-ce
 
-env:
-  # Enable experimental buildx support
-  DOCKER_CLI_EXPERIMENTAL: enabled
-  platforms: linux/i386,linux/amd64,linux/armhf
+install:
+  # GCR & BuildKit don't work together, e.g.:
+  # https://github.com/moby/buildkit/issues/606
+  - echo '{}' | sudo tee /etc/docker/daemon.json
+  - sudo systemctl restart docker
 
-script:
-  - docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-  - docker buildx create --use
-  - docker buildx build --platform "$platforms" dump1090/
-  - docker buildx build --platform "$platforms" fr24feed/
-  - |-
-    if [ "$TRAVIS_BRANCH" = master ]; then
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    docker buildx build --platform "$platforms" -t "$DOCKER_USERNAME/dump1090" --push dump1090/
-    docker buildx build --platform "$platforms" -t "$DOCKER_USERNAME/fr24feed" --push fr24feed/
-    fi
+jobs:
+  include:
+    - name: Build and publish multi-arch images
+      script: |-
+          if [ "$TRAVIS_BRANCH" = master ]; then
+              make login && make builder/create && make push
+          else
+              make builder/create && make build
+          fi
+    - name: Build native images using Compose
+      script: sudo make install-compose && make compose-build
+    - name: Build native images using Docker
+      script: make docker-build
