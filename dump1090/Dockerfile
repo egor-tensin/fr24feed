@@ -35,7 +35,9 @@ COPY --from=builder ["/tmp/dump1090-fa.deb", "./"]
 
 RUN apt-get update -yq && \
     # Supervisor to run both dump1090-fa and lighttpd:
-    apt-get install -yq --no-install-recommends supervisor && \
+    # lighty-enable-mod depends on Term/ReadLine.pm, which isn't listed as a
+    # dependency, which is a bug:
+    apt-get install -yq --no-install-recommends supervisor libterm-readline-gnu-perl && \
     apt-get install -yq ./dump1090-fa.deb && \
     rm -- ./dump1090-fa.deb
 
