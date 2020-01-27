@@ -68,8 +68,8 @@ The approach is to use Docker's new BuildKit builder + the buildx command line
 plugin.
 
 Other possibilities are:
-* use QEMU + multiarch base images directly ([2][2], [3][3]), and create a manifest file
-manually,
+* use QEMU + multiarch base images directly ([2][2], [3][3]), and create a
+manifest file manually,
 * build natively on multiple architectures (not sure how to combine them in a
 single manifest then though).
 

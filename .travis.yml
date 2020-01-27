@@ -28,7 +28,7 @@ jobs:
           if [ "$TRAVIS_BRANCH" = master ]; then
               make login && make builder/create && make push
           else
-              make builder/create && make build
+              make builder/create && make buildx
           fi
     - name: Build native images using Compose
       script: sudo make install-compose && make compose-build

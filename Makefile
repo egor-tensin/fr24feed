@@ -1,3 +1,6 @@
+# Various one-liners which I'm too lazy to remember.
+# Basically a collection of really small shell scripts.
+
 PROJECT = fr24feed
 # Use BuildKit, which is required:
 export DOCKER_BUILDKIT = 1
@@ -37,12 +40,18 @@ binfmt: fix-binfmt
 # Dockerfile's, create a manifest manually, etc.), so it's only here for
 # testing purposes, and native builds.
 docker-build/%:
+ifndef FORCE
+	$(warning Consider using `docker buildx` instead)
+endif
 	docker build -t "$(DOCKER_USERNAME)/$*" "$*/"
 
 docker-build: docker-build/dump1090 docker-build/fr24feed
 
 # `docker-compose build` has the same problems as `docker build`.
 compose-build:
+ifndef FORCE
+	$(warning Consider using `docker buildx` instead)
+endif
 	docker-compose build
 
 # The simple way to build multiarch repos.
@@ -57,19 +66,29 @@ buildx/%:
 
 buildx: buildx/dump1090 buildx/fr24feed
 
-# buildx is used by default.
-build: buildx
+# Build natively by default.
+build: compose-build
 
 # `docker push` would replace the multiarch repo with a single image by default
 # (you'd have to create a manifest and push it instead), so it's only here for
 # testing purposes.
-docker-push/%: docker-build/%
+check-docker-push:
+ifndef FORCE
+	$(error Please do not use `docker push`)
+endif
+
+docker-push/%: check-docker-push docker-build/%
 	docker push "$(DOCKER_USERNAME)/$*"
 
-docker-push: docker-push/dump1090 docker-push/fr24feed
+docker-push: check-docker-push docker-push/dump1090 docker-push/fr24feed
 
 # `docker-compose push` has the same problems as `docker push`.
-compose-push: compose-build
+check-compose-push:
+ifndef FORCE
+	$(error Please do not use `docker-compose push`)
+endif
+
+compose-push: check-compose-push compose-build
 	docker-compose push
 
 # The simple way to push multiarch repos.
@@ -81,16 +100,16 @@ buildx-push: buildx-push/dump1090 buildx-push/fr24feed
 # buildx is used by default.
 push: buildx-push
 
+pull:
+	docker-compose pull
+
 up:
 	docker-compose up -d
 
 down:
 	docker-compose down --volumes
 
-pull:
-	docker-compose pull
-
 clean:
 	docker system prune --all --force --volumes
 
-.PHONY: all login install-compose compose fix-binfmt binfmt docker-build compose-build builder/create builder/rm buildx build docker-push compose-push buildx-push push up down pull clean
+.PHONY: all login install-compose compose fix-binfmt binfmt docker-build compose-build builder/create builder/rm buildx build check-docker-push docker-push check-compose-push compose-push buildx-push push pull up down clean
