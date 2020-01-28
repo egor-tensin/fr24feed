@@ -7,30 +7,28 @@ services:
 
 addons:
   apt:
-    update: true
     # Newer docker for BuildKit/buildx support:
+    packages:
+      - docker-ce
     sources:
       - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
         sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
-    packages:
-      - docker-ce
 
 install:
-  # GCR & BuildKit don't work together, e.g.:
+  # GCR & BuildKit don't place nice together, e.g.:
   # https://github.com/moby/buildkit/issues/606
   - echo '{}' | sudo tee /etc/docker/daemon.json
   - sudo systemctl restart docker
 
 jobs:
   include:
-    - name: Build and publish multi-arch images
-      script: |-
-          if [ "$TRAVIS_BRANCH" = master ]; then
-              make login && make builder/create && make push
-          else
-              make builder/create && make buildx
-          fi
+    - name: Build native images
+      script: make docker-build
     - name: Build native images using Compose
       script: sudo make install-compose && make compose-build
-    - name: Build native images using Docker
-      script: make docker-build
+    - name: Build multi-arch images
+      if: branch != master
+      script: make builder/create && make buildx
+    - name: Build & publish multi-arch images
+      if: branch = master
+      script: make login && make builder/create && make push
