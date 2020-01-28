@@ -46,11 +46,11 @@ Development
 
 TL;DR: build the native images using
 
-    make compose-build
+    make compose/build
 
 Or, if you have Compose version 1.24.x or below,
 
-    make docker-build
+    make docker/build
 
 ### Dependencies
 

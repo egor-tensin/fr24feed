@@ -1,4 +1,4 @@
-language: minimal
+language: shell
 os: linux
 dist: bionic
 
@@ -15,7 +15,7 @@ addons:
         sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
 
 install:
-  # GCR & BuildKit don't place nice together, e.g.:
+  # GCR & BuildKit don't play nice together, e.g.:
   # https://github.com/moby/buildkit/issues/606
   - echo '{}' | sudo tee /etc/docker/daemon.json
   - sudo systemctl restart docker
@@ -23,12 +23,12 @@ install:
 jobs:
   include:
     - name: Build native images
-      script: make docker-build
+      script: make docker/build
     - name: Build native images using Compose
-      script: sudo make install-compose && make compose-build
+      script: sudo make compose/install && make compose/build
     - name: Build multi-arch images
       if: branch != master
-      script: make builder/create && make buildx
+      script: make buildx/create && make buildx/build
     - name: Build & publish multi-arch images
       if: branch = master
-      script: make login && make builder/create && make push
+      script: make login && make buildx/create && make buildx/push
