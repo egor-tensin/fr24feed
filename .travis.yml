@@ -21,14 +21,14 @@ install:
   - sudo systemctl restart docker
 
 jobs:
+  fast_finish: true
+
   include:
     - name: Build native images
       script: make docker/build
     - name: Build native images using Compose
       script: sudo make compose/install && make compose/build
-    - name: Build multi-arch images
-      if: branch != master
-      script: make buildx/create && make buildx/build
-    - name: Build & publish multi-arch images
+    - stage: deploy
+      name: Build & publish multi-arch images
       if: branch = master
       script: make login && make buildx/create && make buildx/push
