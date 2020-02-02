@@ -1,6 +1,12 @@
 # Various one-liners which I'm too lazy to remember.
 # Basically a collection of really small shell scripts.
 
+MAKEFLAGS += --warn-undefined-variables
+SHELL := bash
+.SHELLFLAGS := -eu -o pipefail -c
+.DEFAULT_GOAL := all
+.SUFFIXES:
+
 PROJECT = fr24feed
 # Use BuildKit, which is required:
 export DOCKER_BUILDKIT = 1
@@ -16,6 +22,8 @@ compose_version = 1.25.3
 DOCKER_USERNAME = egortensin
 
 all: build
+
+DO:
 
 login:
 ifndef DOCKER_PASSWORD
@@ -54,7 +62,7 @@ endif
 # `docker build` has week support for multiarch repos (you need to use multiple
 # Dockerfile's, create a manifest manually, etc.), so it's only here for
 # testing purposes, and native builds.
-docker/build/%: check-build
+docker/build/%: DO check-build
 	docker build -t "$(DOCKER_USERNAME)/$*" "$*/"
 
 docker/build: docker/build/dump1090 docker/build/fr24feed
@@ -62,7 +70,7 @@ docker/build: docker/build/dump1090 docker/build/fr24feed
 # `docker push` would replace the multiarch repo with a single image by default
 # (you'd have to create a manifest and push it instead), so it's only here for
 # testing purposes.
-docker/push/%: check-push docker/build/%
+docker/push/%: DO check-push docker/build/%
 	docker push "$(DOCKER_USERNAME)/$*"
 
 docker/push: check-push docker/push/dump1090 docker/push/fr24feed
@@ -92,12 +100,12 @@ buildx/create: fix-binfmt
 buildx/rm:
 	docker buildx rm "$(PROJECT)_builder"
 
-buildx/build/%:
+buildx/build/%: DO
 	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(platforms)" "$*/"
 
 buildx/build: buildx/build/dump1090 buildx/build/fr24feed
 
-buildx/push/%:
+buildx/push/%: DO
 	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(platforms)" --push "$*/"
 
 buildx/push: buildx/push/dump1090 buildx/push/fr24feed
