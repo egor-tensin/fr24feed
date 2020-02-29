@@ -28,7 +28,7 @@ jobs:
       script: make docker/build
     - name: Build native images using Compose
       script: sudo make compose/install && make compose/build
-    - stage: deploy
+    - stage: publish
       name: Build & publish multi-arch images
       if: branch = master
       script: make login && make buildx/create && make buildx/push
