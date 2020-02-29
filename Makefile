@@ -7,19 +7,19 @@ SHELL := bash
 .DEFAULT_GOAL := all
 .SUFFIXES:
 
-PROJECT = fr24feed
+PROJECT := fr24feed
 # Use BuildKit, which is required:
-export DOCKER_BUILDKIT = 1
+export DOCKER_BUILDKIT := 1
 # Enable buildx support:
-export DOCKER_CLI_EXPERIMENTAL = enabled
+export DOCKER_CLI_EXPERIMENTAL := enabled
 # Enable BuildKit in docker-compose (requires 1.25.0 or higher):
-export COMPOSE_DOCKER_CLI_BUILD = 1
+export COMPOSE_DOCKER_CLI_BUILD := 1
 # Target platforms (used by buildx):
-platforms = linux/i386,linux/amd64,linux/armhf
+platforms := linux/i386,linux/amd64,linux/armhf
 # One of the latest (at the moment) Compose versions that supports BuildKit:
-compose_version = 1.25.3
+compose_version := 1.25.3
 # Docker Hub credentials:
-DOCKER_USERNAME = egortensin
+DOCKER_USERNAME := egortensin
 
 all: build
 
