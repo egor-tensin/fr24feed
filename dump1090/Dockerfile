@@ -4,7 +4,7 @@ FROM debian:stretch-slim AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Variables:
-ARG DUMP1090_VERSION=3.7.2
+ARG DUMP1090_VERSION=3.8.0
 ENV DUMP1090_VERSION="${DUMP1090_VERSION}"
 
 WORKDIR /tmp
