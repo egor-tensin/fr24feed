@@ -20,7 +20,7 @@ ENV fr24feed_archive_suffix=amd64
 
 FROM base AS env-arm
 ENV fr24feed_directory=rpi_binaries
-ENV fr24feed_version=1.0.24-7
+ENV fr24feed_version=1.0.25-1
 ENV fr24feed_archive_suffix=armhf
 
 ARG TARGETARCH
