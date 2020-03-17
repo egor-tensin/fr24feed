@@ -24,11 +24,17 @@ ENV fr24feed_version=1.0.25-1
 ENV fr24feed_archive_suffix=armhf
 
 ARG TARGETARCH
-FROM env-$TARGETARCH
-
-LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+FROM env-$TARGETARCH AS builder
 
 ENV fr24feed_archive_name="fr24feed_${fr24feed_version}_${fr24feed_archive_suffix}.tgz"
+WORKDIR /tmp
+ADD ["https://repo-feed.flightradar24.com/$fr24feed_directory/$fr24feed_archive_name", "./"]
+RUN tar xzf "$fr24feed_archive_name"
+ENV fr24feed_directory="fr24feed_${fr24feed_archive_suffix}"
+
+FROM builder
+
+LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 
 # Don't prompt:
 ENV DEBIAN_FRONTEND=noninteractive
@@ -38,14 +44,10 @@ RUN runtime_deps='ca-certificates procps' && \
     apt-get update -yq && \
     apt-get install -yq --no-install-recommends $runtime_deps
 
-WORKDIR /tmp
-ADD ["https://repo-feed.flightradar24.com/$fr24feed_directory/$fr24feed_archive_name", "./"]
-RUN tar xzf "$fr24feed_archive_name" && \
-    rm -- "$fr24feed_archive_name"
-
+COPY --from=builder ["/tmp/$fr24feed_directory", "/tmp/"]
 COPY ["fr24feed.ini", "/etc/"]
 
 EXPOSE 8754
 
-WORKDIR "fr24feed_${fr24feed_archive_suffix}"
+WORKDIR "/tmp/$fr24feed_directory"
 CMD ["./fr24feed"]
