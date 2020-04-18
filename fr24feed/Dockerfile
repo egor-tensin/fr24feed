@@ -30,11 +30,12 @@ ENV fr24feed_archive_name="fr24feed_${fr24feed_version}_${fr24feed_archive_suffi
 WORKDIR /tmp
 ADD ["https://repo-feed.flightradar24.com/$fr24feed_directory/$fr24feed_archive_name", "./"]
 RUN tar xzf "$fr24feed_archive_name"
-ENV fr24feed_directory="fr24feed_${fr24feed_archive_suffix}"
 
-FROM builder
+FROM env-$TARGETARCH
 
 LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+
+ENV fr24feed_directory="fr24feed_${fr24feed_archive_suffix}"
 
 # Don't prompt:
 ENV DEBIAN_FRONTEND=noninteractive
@@ -44,7 +45,7 @@ RUN runtime_deps='ca-certificates procps' && \
     apt-get update -yq && \
     apt-get install -yq --no-install-recommends $runtime_deps
 
-COPY --from=builder ["/tmp/$fr24feed_directory", "/tmp/"]
+COPY --from=builder ["/tmp/$fr24feed_directory", "/tmp/$fr24feed_directory/"]
 COPY ["fr24feed.ini", "/etc/"]
 
 EXPOSE 8754
