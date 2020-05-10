@@ -6,8 +6,12 @@ FROM debian:stretch-slim AS base
 # unsuitable (no systemctl, etc.).
 # Using BuildKit is required for this to work (it exposes TARGETARCH).
 
-# The latest versions of the fr24feed binary for i386/x86_64/armhf as of
-# 2020-03-27, according to https://www.flightradar24.com/share-your-data.
+# The latest versions of the fr24feed binary for i386/x86_64/armhf according
+# to:
+
+# https://www.flightradar24.com/share-your-data
+#
+# as of 2020-05-10.
 FROM base AS env-386
 ENV fr24feed_directory=linux_x86_binaries
 ENV fr24feed_version=1.0.24-5
@@ -20,7 +24,7 @@ ENV fr24feed_archive_suffix=amd64
 
 FROM base AS env-arm
 ENV fr24feed_directory=rpi_binaries
-ENV fr24feed_version=1.0.25-1
+ENV fr24feed_version=1.0.25-3
 ENV fr24feed_archive_suffix=armhf
 
 ARG TARGETARCH
