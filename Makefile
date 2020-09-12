@@ -15,11 +15,15 @@ export DOCKER_CLI_EXPERIMENTAL := enabled
 # Enable BuildKit in docker-compose (requires 1.25.0 or higher):
 export COMPOSE_DOCKER_CLI_BUILD := 1
 # Target platforms (used by buildx):
-platforms := linux/i386,linux/amd64,linux/armhf
+PLATFORMS := linux/i386,linux/amd64,linux/armhf
 # One of the latest (at the moment) Compose versions that supports BuildKit:
-compose_version := 1.25.3
+COMPOSE_VERSION := 1.25.3
+# In case buildx isn't installed (e.g. on Ubuntu):
+BUILDX_VERSION := v0.4.2
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
+
+curl := curl --silent --show-error --location --dump-header - --connect-timeout 20
 
 .PHONY: all
 all: build
@@ -91,8 +95,8 @@ docker/push: check-push docker/push/dump1090 docker/push/fr24feed
 .PHONY: compose/install
 # Quickly install a newer Compose version:
 compose/install:
-	curl -L "https://github.com/docker/compose/releases/download/$(compose_version)/docker-compose-$$(uname -s)-$$(uname -m)" -o /usr/local/bin/docker-compose
-	chmod +x /usr/local/bin/docker-compose
+	$(curl) --output /usr/local/bin/docker-compose -- "https://github.com/docker/compose/releases/download/$(COMPOSE_VERSION)/docker-compose-$$(uname -s)-$$(uname -m)"
+	chmod +x -- /usr/local/bin/docker-compose
 
 .PHONY: compose/build
 # `docker-compose build` has the same problems as `docker build`.
@@ -111,6 +115,12 @@ compose/push: check-push compose/build
 fix-binfmt:
 	docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
 
+.PHONY: buildx/install
+buildx/install:
+	mkdir -p -- ~/.docker/cli-plugins/
+	$(curl) --output ~/.docker/cli-plugins/docker-buildx -- 'https://github.com/docker/buildx/releases/download/$(BUILDX_VERSION)/buildx-$(BUILDX_VERSION).linux-amd64'
+	chmod +x -- ~/.docker/cli-plugins/docker-buildx
+
 .PHONY: buildx/create
 buildx/create: fix-binfmt
 	docker buildx create --use --name "$(PROJECT)_builder"
@@ -120,13 +130,13 @@ buildx/rm:
 	docker buildx rm "$(PROJECT)_builder"
 
 buildx/build/%: DO
-	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(platforms)" "$*/"
+	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(PLATFORMS)" "$*/"
 
 .PHONY: buildx/build
 buildx/build: buildx/build/dump1090 buildx/build/fr24feed
 
 buildx/push/%: DO
-	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(platforms)" --push "$*/"
+	docker buildx build -t "$(DOCKER_USERNAME)/$*" --platform "$(PLATFORMS)" --push "$*/"
 
 .PHONY: buildx/push
 buildx/push: buildx/push/dump1090 buildx/push/fr24feed

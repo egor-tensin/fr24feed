@@ -1,18 +1,9 @@
 language: shell
 os: linux
-dist: bionic
+dist: focal
 
 services:
   - docker
-
-addons:
-  apt:
-    # Newer docker for BuildKit/buildx support:
-    packages:
-      - docker-ce
-    sources:
-      - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
-        sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
 
 install:
   # GCR & BuildKit don't play nice together, e.g.:
@@ -31,4 +22,6 @@ jobs:
     - stage: publish
       name: Build & publish multi-arch images
       if: branch = master
+      # buildx isn't installed on Focal.
+      before_script: make buildx/install
       script: make login && make buildx/create && make buildx/push
