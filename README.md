@@ -1,7 +1,7 @@
 fr24feed in Docker
 ==================
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/fr24feed/master?label=Travis%20%28Docker%29)](https://travis-ci.com/egor-tensin/fr24feed)
+[![Publish](https://github.com/egor-tensin/fr24feed/workflows/Publish/badge.svg)](https://github.com/egor-tensin/fr24feed/actions?query=workflow%3APublish)
 
 I'm tired of keeping track of all the hacks I needed to introduce to my Arch
 Linux installation on my Raspberry Pi to get fr24feed running, so here's a
