@@ -14,17 +14,17 @@ FROM debian:stretch-slim AS base
 # as of 2020-05-10.
 FROM base AS env-386
 ENV fr24feed_directory=linux_x86_binaries
-ENV fr24feed_version=1.0.24-5
+ENV fr24feed_version=1.0.25-3
 ENV fr24feed_archive_suffix=i386
 
 FROM base AS env-amd64
 ENV fr24feed_directory=linux_x86_64_binaries
-ENV fr24feed_version=1.0.24-5
+ENV fr24feed_version=1.0.25-3
 ENV fr24feed_archive_suffix=amd64
 
 FROM base AS env-arm
 ENV fr24feed_directory=rpi_binaries
-ENV fr24feed_version=1.0.25-3
+ENV fr24feed_version=1.0.26-9
 ENV fr24feed_archive_suffix=armhf
 
 ARG TARGETARCH
