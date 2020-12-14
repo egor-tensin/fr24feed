@@ -11,7 +11,7 @@ FROM debian:stretch-slim AS base
 
 # https://www.flightradar24.com/share-your-data
 #
-# as of 2020-05-10.
+# as of 2020-12-13.
 FROM base AS env-386
 ENV fr24feed_directory=linux_x86_binaries
 ENV fr24feed_version=1.0.25-3
