@@ -8,7 +8,6 @@ FROM debian:stretch-slim AS base
 
 # The latest versions of the fr24feed binary for i386/x86_64/armhf according
 # to:
-
 # https://www.flightradar24.com/share-your-data
 #
 # as of 2020-12-13.
@@ -41,13 +40,11 @@ LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 
 ENV fr24feed_directory="fr24feed_${fr24feed_archive_suffix}"
 
-# Don't prompt:
-ENV DEBIAN_FRONTEND=noninteractive
-
     # fr24feed dependencies:
 RUN runtime_deps='ca-certificates procps' && \
-    apt-get update -yq && \
-    apt-get install -yq --no-install-recommends $runtime_deps
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+        apt-get install -y --no-install-recommends $runtime_deps
 
 COPY --from=builder ["/tmp/$fr24feed_directory", "/tmp/$fr24feed_directory/"]
 COPY ["fr24feed.ini", "/etc/"]
