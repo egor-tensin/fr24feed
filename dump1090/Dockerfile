@@ -2,7 +2,6 @@ FROM debian:stretch-slim AS builder
 
 # Variables:
 ARG DUMP1090_VERSION=3.8.0
-ENV DUMP1090_VERSION="${DUMP1090_VERSION}"
 
 WORKDIR /tmp
 
@@ -14,12 +13,12 @@ RUN build_deps='build-essential debhelper librtlsdr-dev pkg-config dh-systemd li
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
         apt-get install -y --no-install-recommends $build_deps && \
-    tar xzf dump1090-${DUMP1090_VERSION}.tar.gz && \
-    cd -- dump1090-${DUMP1090_VERSION} && \
+    tar xzf "dump1090-$DUMP1090_VERSION.tar.gz" && \
+    cd -- "dump1090-$DUMP1090_VERSION" && \
     dpkg-buildpackage -b && \
     cd -- .. && \
     dump1090_arch="$( dpkg --print-architecture )" && \
-    mv -- dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb dump1090-fa.deb
+    mv -- "dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb" dump1090-fa.deb
 
 FROM debian:stretch-slim
 
