@@ -7,7 +7,7 @@ on:
 
 jobs:
   native:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: Build native images
     steps:
       - name: Checkout
@@ -16,7 +16,7 @@ jobs:
         run: make docker/build
 
   compose:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: Build using Compose
     steps:
       - name: Checkout
@@ -29,7 +29,7 @@ jobs:
     strategy:
       matrix:
         project: [dump1090, fr24feed]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: 'Publish ${{ matrix.project }}'
     if: github.ref == 'refs/heads/master'
     steps:
