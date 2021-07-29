@@ -1,14 +1,14 @@
 FROM debian:stretch-slim AS builder
 
 # Variables:
-ARG DUMP1090_VERSION=3.8.0
+ARG DUMP1090_VERSION=3.8.1
 
 WORKDIR /tmp
 
 # Build the dump1090-fa package:
 ADD ["https://github.com/flightaware/dump1090/archive/v${DUMP1090_VERSION}.tar.gz", "./dump1090-${DUMP1090_VERSION}.tar.gz"]
 
-    # dump1090 build dependencies (from README at https://github.com/flightaware/dump1090/blob/v3.7.2/README.md):
+    # dump1090 build dependencies (from README at https://github.com/flightaware/dump1090/blob/v3.8.1/README.md):
 RUN build_deps='build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev' && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
