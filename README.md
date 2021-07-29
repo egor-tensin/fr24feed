@@ -57,29 +57,29 @@ Or, if you have Compose version 1.24.x or below,
 * Docker with BuildKit support (18.09 or higher),
 * Compose with BuildKit support for `compose/build` (1.25.0 or higher).
 
-### CI
+### Multiarch
 
-I used a guide to set up multiarch builds ([1][1]).
-I don't understand it completely at the moment, but whatever.
+Build & push multiarch images using
 
-The goal is to have a single multiarch repo on Docker Hub for each of the
-services.
+    make buildx/create
+    make buildx/push
+    make buildx/rm
+
+A guide on how to set up multiarch builds can be found [here].
+The goal was to have a single multiarch repo for each container in the
+registry.
 The approach is to use Docker's new BuildKit builder + the buildx command line
 plugin.
 
 Other possibilities are:
-* use QEMU + multiarch base images directly ([2][2], [3][3]), and create a
+* use QEMU + multiarch base images directly ([1][1], [2][2]), and create a
 manifest file manually,
 * build natively on multiple architectures (not sure how to combine them in a
 single manifest then though).
 
-The disadvantages of the approach taken are:
-* newer Docker version is required,
-* docker-compose doesn't seem to support that method natively.
-
-[1]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
-[2]: https://lobradov.github.io/Building-docker-multiarch-images/
-[3]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
+[here]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
+[1]: https://lobradov.github.io/Building-docker-multiarch-images/
+[2]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
 
 Sources
 -------
