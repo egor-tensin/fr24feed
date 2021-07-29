@@ -34,8 +34,8 @@ Start the containers using
 
     make pull && make up
 
-You can now access the interactive map at http://0.0.0.0:8080/dump1090-fa/ and
-the fr24feed web interface at http://0.0.0.0:8754/.
+You can now access the interactive map at http://127.0.0.1:8080/dump1090-fa/
+and the fr24feed web interface at http://127.0.0.1:8754/.
 
 Stop the containers using
 
@@ -80,8 +80,3 @@ The disadvantages of the approach taken are:
 [1]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
 [2]: https://lobradov.github.io/Building-docker-multiarch-images/
 [3]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
-
-### TODO
-
-* Docker Hub automated builds instead of Travis?
-* docker-compose instead of docker buildx?
