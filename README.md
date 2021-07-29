@@ -55,7 +55,7 @@ Or, if you have Compose version 1.24.x or below,
 ### Dependencies
 
 * Docker with BuildKit support (18.09 or higher),
-* Compose with BuildKit support for `compose-build` (1.25.0 or higher).
+* Compose with BuildKit support for `compose/build` (1.25.0 or higher).
 
 ### CI
 
