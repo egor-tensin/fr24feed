@@ -80,3 +80,12 @@ The disadvantages of the approach taken are:
 [1]: https://mirailabs.io/blog/multiarch-docker-with-buildx/
 [2]: https://lobradov.github.io/Building-docker-multiarch-images/
 [3]: https://ownyourbits.com/2018/06/27/running-and-building-arm-docker-containers-in-x86/
+
+Sources
+-------
+
+* [dump1090]: ADS-B, Mode S, and Mode 3A/3C demodulator and decoder.
+* [fr24feed]: Flightradar24 software to upload decoded data to their network.
+
+[dump1090]: https://github.com/flightaware/dump1090
+[fr24feed]: https://www.flightradar24.com/share-your-data
