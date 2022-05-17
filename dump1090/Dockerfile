@@ -1,26 +1,27 @@
-FROM debian:stretch-slim AS builder
+FROM debian:bullseye-slim AS builder
 
 # Variables:
-ARG DUMP1090_VERSION=3.8.1
+ARG DUMP1090_VERSION=7.2
 
 WORKDIR /tmp
 
-# Build the dump1090-fa package:
-ADD ["https://github.com/flightaware/dump1090/archive/v${DUMP1090_VERSION}.tar.gz", "./dump1090-${DUMP1090_VERSION}.tar.gz"]
-
-    # dump1090 build dependencies (from README at https://github.com/flightaware/dump1090/blob/v3.8.1/README.md):
-RUN build_deps='build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libbladerf-dev' && \
+    # dump1090 build dependencies (from README at https://github.com/flightaware/dump1090/blob/v7.2/README.md):
+RUN build_deps='build-essential fakeroot debhelper librtlsdr-dev pkg-config libncurses5-dev libbladerf-dev libhackrf-dev liblimesuite-dev' && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
-        apt-get install -y --no-install-recommends $build_deps && \
-    tar xzf "dump1090-$DUMP1090_VERSION.tar.gz" && \
-    cd -- "dump1090-$DUMP1090_VERSION" && \
-    dpkg-buildpackage -b && \
-    cd -- .. && \
-    dump1090_arch="$( dpkg --print-architecture )" && \
-    mv -- "dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb" dump1090-fa.deb
+        apt-get install -y --no-install-recommends $build_deps
 
-FROM debian:stretch-slim
+ADD ["https://github.com/flightaware/dump1090/archive/v${DUMP1090_VERSION}.tar.gz", "./dump1090-${DUMP1090_VERSION}.tar.gz"]
+
+RUN tar xzf "dump1090-$DUMP1090_VERSION.tar.gz" && \
+    cd -- "dump1090-$DUMP1090_VERSION" && \
+    ./prepare-build.sh bullseye && \
+    cd package-bullseye && \
+    dpkg-buildpackage -b --no-sign && \
+    dump1090_arch="$( dpkg --print-architecture )" && \
+    cp -- "../dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb" /tmp/dump1090-fa.deb
+
+FROM debian:bullseye-slim
 
 LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 
