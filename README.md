@@ -41,6 +41,25 @@ Stop the containers using
 
     make down
 
+DVB-T dongles
+-------------
+
+They can be bought on eBay and AliExpress for a few dollars.
+This is what they look like:
+
+![DVB-T dongle example](doc/dongle.jpeg "DVB-T dongle")
+
+You have to be careful not to buy the wrong one though.
+All of them are equipped with tuners, some of which don't support the 1090 MHz
+frequency.
+I've made the mistake to buy dongles with the FC0012 tuner, which doesn't
+support it.
+In general, you'll see something like
+
+    [FC0012] no valid PLL combination found for 1090000000 Hz!
+
+in dump1090 container output if your dongle isn't supported.
+
 Development
 -----------
 
