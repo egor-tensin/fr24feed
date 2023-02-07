@@ -6,31 +6,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  native:
+  docker:
     runs-on: ubuntu-latest
-    name: Build native images
+    name: Build / docker build
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build native images
+      - name: Build /w docker build
         run: make docker/build
 
   compose:
     runs-on: ubuntu-latest
-    name: Build using Compose
+    name: Build / docker-compose
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build using Compose
+      - name: Build w/ docker-compose
         run: make compose/build
 
   publish:
-    needs: [native, compose]
+    needs: [docker, compose]
     strategy:
       matrix:
         project: [dump1090, fr24feed]
     runs-on: ubuntu-latest
-    name: 'Publish ${{ matrix.project }}'
+    name: 'Publish / ${{ matrix.project }}'
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
