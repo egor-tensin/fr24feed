@@ -28,12 +28,8 @@ PROJECT := fr24feed
 export DOCKER_BUILDKIT := 1
 # Enable buildx support:
 export DOCKER_CLI_EXPERIMENTAL := enabled
-# Enable BuildKit in docker-compose (requires 1.25.0 or higher):
-export COMPOSE_DOCKER_CLI_BUILD := 1
 # Target platforms (used by buildx):
 PLATFORMS := linux/i386,linux/amd64,linux/armhf
-# One of the latest (at the moment) Compose versions that supports BuildKit:
-COMPOSE_VERSION := 1.25.3
 # In case buildx isn't installed (e.g. on Ubuntu):
 BUILDX_VERSION := v0.4.2
 # Docker Hub credentials:
@@ -106,12 +102,6 @@ docker/push/%: DO check-push docker/build/%
 
 .PHONY: docker/push
 docker/push: check-push docker/push/dump1090 docker/push/fr24feed
-
-.PHONY: compose/install
-# Quickly install a newer Compose version:
-compose/install:
-	$(curl) --output /usr/local/bin/docker-compose -- 'https://github.com/docker/compose/releases/download/$(call escape,$(COMPOSE_VERSION))'"/docker-compose-$$(uname -s)-$$(uname -m)"
-	chmod +x -- /usr/local/bin/docker-compose
 
 .PHONY: compose/build
 # `docker-compose build` has the same problems as `docker build`.
