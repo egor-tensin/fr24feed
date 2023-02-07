@@ -24,8 +24,20 @@ jobs:
       - name: Build w/ docker-compose
         run: make compose/build
 
+  buildx:
+    runs-on: ubuntu-latest
+    name: Build / docker buildx
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build w/ docker buildx
+        run: |
+          make buildx/create
+          make buildx/build
+          make buildx/rm
+
   publish:
-    needs: [docker, compose]
+    needs: [docker, compose, buildx]
     strategy:
       matrix:
         project: [dump1090, fr24feed]
