@@ -43,7 +43,8 @@ login:
 ifndef DOCKER_PASSWORD
 	$(error Please define DOCKER_PASSWORD)
 endif
-	@echo '$(call escape,$(DOCKER_PASSWORD))' | docker login --username '$(call escape,$(DOCKER_USERNAME))' --password-stdin
+	@echo '$(call escape,$(DOCKER_PASSWORD))' \
+		| docker login --username '$(call escape,$(DOCKER_USERNAME))' --password-stdin
 
 .PHONY: build
 # Build natively by default.
@@ -104,13 +105,20 @@ buildx/rm:
 	docker buildx rm '$(call escape,$(PROJECT))_builder'
 
 buildx/build/%: DO
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$*' --platform '$(call escape,$(PLATFORMS))' '$*/'
+	docker buildx build \
+		-t '$(call escape,$(DOCKER_USERNAME))/$*' \
+		--platform '$(call escape,$(PLATFORMS))' \
+		'$*/'
 
 .PHONY: buildx/build
 buildx/build: buildx/build/dump1090 buildx/build/fr24feed
 
 buildx/push/%: DO
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$*' --platform '$(call escape,$(PLATFORMS))' --push '$*/'
+	docker buildx build \
+		-t '$(call escape,$(DOCKER_USERNAME))/$*' \
+		--platform '$(call escape,$(PLATFORMS))' \
+		--push \
+		'$*/'
 
 .PHONY: buildx/push
 buildx/push: buildx/push/dump1090 buildx/push/fr24feed
