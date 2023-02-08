@@ -81,24 +81,6 @@ ifndef FORCE
 	$(error Please use `docker buildx build --push` instead)
 endif
 
-# `docker build` has week support for multiarch repos (you need to use multiple
-# Dockerfile's, create a manifest manually, etc.), so it's only here for
-# testing purposes, and native builds.
-docker/build/%: DO check-build
-	docker build -t '$(call escape,$(DOCKER_USERNAME))/$*' '$*/'
-
-.PHONY: docker/build
-docker/build: docker/build/dump1090 docker/build/fr24feed
-
-# `docker push` would replace the multiarch repo with a single image by default
-# (you'd have to create a manifest and push it instead), so it's only here for
-# testing purposes.
-docker/push/%: DO check-push docker/build/%
-	docker push '$(call escape,$(DOCKER_USERNAME))/$*'
-
-.PHONY: docker/push
-docker/push: check-push docker/push/dump1090 docker/push/fr24feed
-
 .PHONY: compose/build
 # `docker-compose build` has the same problems as `docker build`.
 compose/build: check-build

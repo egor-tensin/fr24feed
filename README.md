@@ -63,13 +63,9 @@ in dump1090 container output if your dongle isn't supported.
 Development
 -----------
 
-TL;DR: build the native images using
+TL;DR: build Docker images using
 
-    make compose/build
-
-Or, if you have Compose version 1.24.x or below,
-
-    make docker/build
+    make
 
 ### Dependencies
 
