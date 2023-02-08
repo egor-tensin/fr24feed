@@ -82,12 +82,16 @@ ifndef FORCE
 endif
 
 .PHONY: compose/build
-# `docker-compose build` has the same problems as `docker build`.
+# `docker-compose build` has week support for multiarch repos (you need to use
+# multiple Dockerfile's, create a manifest manually, etc.), so it's only here
+# for testing purposes, and native builds.
 compose/build: check-build
 	docker-compose build
 
 .PHONY: compose/push
-# `docker-compose push` has the same problems as `docker push`.
+# `docker-compose push` would replace the multiarch repo with a single image by
+# default (you'd have to create a manifest and push it instead), so it's only
+# here for testing purposes.
 compose/push: check-push compose/build
 	docker-compose push
 
