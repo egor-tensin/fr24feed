@@ -52,6 +52,6 @@ jobs:
         with:
           context: '${{ matrix.project }}'
           file: '${{ matrix.project }}/Dockerfile'
-          platforms: linux/i386,linux/amd64,linux/armhf
+          platforms: i386,amd64,armhf
           push: true
           tags: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.project }}:latest'

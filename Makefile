@@ -25,7 +25,7 @@ DO:
 
 PROJECT := fr24feed
 # Target platforms (used by buildx):
-PLATFORMS := linux/i386,linux/amd64,linux/armhf
+PLATFORMS := i386,amd64,armhf
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
 # Use BuildKit, which is required (i.e. for using variables in FROM):
