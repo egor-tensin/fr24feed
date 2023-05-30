@@ -2,13 +2,14 @@
 # hostname -I, etc.).
 FROM debian:stretch-slim AS base
 
-# Those are weird hacks, but the alternative (using the apt repository) was
-# unsuitable (no systemctl, etc.).
+# Those are weird hacks, but the alternative (using the Flightradar24 apt
+# repository) was unsuitable (no systemctl in the container, etc.).
 # Using BuildKit is required for this to work (it exposes TARGETARCH).
 
 # The latest versions of the fr24feed binary for i386/x86_64/armhf according
 # to:
-# https://www.flightradar24.com/share-your-data
+#
+#     https://www.flightradar24.com/share-your-data
 #
 # as of 2023-02-08.
 FROM base AS env-386
