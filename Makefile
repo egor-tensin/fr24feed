@@ -28,7 +28,7 @@ PROJECT := fr24feed
 PLATFORMS := i386,amd64,armhf
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
-# Use BuildKit, which is required (i.e. for using variables in FROM):
+# This is still required with older Compose versions to use TARGETARCH:
 export DOCKER_BUILDKIT := 1
 
 ifdef DOCKER_PASSWORD
