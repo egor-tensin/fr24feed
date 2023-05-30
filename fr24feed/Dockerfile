@@ -1,6 +1,6 @@
 # Alpine is a bit too extreme (it doesn't have /etc/localtime, no support for
 # hostname -I, etc.).
-FROM debian:stretch-slim AS base
+FROM debian:bullseye-slim AS base
 
 # Those are weird hacks, but the alternative (using the Flightradar24 apt
 # repository) was unsuitable (no systemctl in the container, etc.).
