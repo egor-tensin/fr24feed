@@ -5,7 +5,7 @@ DO:
 
 PROJECT := fr24feed
 # Target platforms (used by buildx):
-PLATFORMS := i386,amd64,armhf
+PLATFORMS := i386,amd64,arm64
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
 # This is still required with older Compose versions to use TARGETARCH:

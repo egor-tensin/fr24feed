@@ -6,26 +6,26 @@ FROM debian:bullseye-slim AS base
 # repository) was unsuitable (no systemctl in the container, etc.).
 # Using BuildKit is required for this to work (it exposes TARGETARCH).
 
-# The latest versions of the fr24feed binary for i386/x86_64/armhf according
+# The latest versions of the fr24feed binary for i386/x86_64/arm64 according
 # to:
 #
 #     https://www.flightradar24.com/share-your-data
 #
 # as of 2023-12-10.
 FROM base AS env-386
-ENV fr24feed_directory=linux_x86_binaries
+ENV fr24feed_directory=linux_binaries
 ENV fr24feed_version=1.0.44-0
 ENV fr24feed_archive_suffix=i386
 
 FROM base AS env-amd64
-ENV fr24feed_directory=linux_x86_64_binaries
+ENV fr24feed_directory=linux_binaries
 ENV fr24feed_version=1.0.44-0
 ENV fr24feed_archive_suffix=amd64
 
-FROM base AS env-arm
+FROM base AS env-arm64
 ENV fr24feed_directory=rpi_binaries
 ENV fr24feed_version=1.0.44-0
-ENV fr24feed_archive_suffix=armhf
+ENV fr24feed_archive_suffix=arm64
 
 ARG TARGETARCH
 FROM env-$TARGETARCH AS builder
