@@ -1,14 +1,7 @@
-version: '3.4'
-
-x-default-settings:
-  &default-settings
-  logging:
-    driver: journald
-  restart: unless-stopped
+version: '3'
 
 services:
   dump1090:
-    << : *default-settings
     build: ./dump1090
     devices:
       - /dev/bus/usb
@@ -23,11 +16,11 @@ services:
     image: egortensin/dump1090
     ports:
       - 8080:8080
+    restart: unless-stopped
     volumes:
       - './dump1090/config.js:/usr/share/dump1090-fa/html/config.js:ro'
       - './dump1090/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:ro'
   fr24feed:
-    << : *default-settings
     build: ./fr24feed
     depends_on:
       - dump1090
@@ -36,5 +29,6 @@ services:
     image: egortensin/fr24feed
     ports:
       - 8754:8754
+    restart: unless-stopped
     volumes:
       - './fr24feed/fr24feed.ini:/etc/fr24feed.ini:ro'
