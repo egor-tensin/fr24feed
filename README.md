@@ -14,8 +14,7 @@ Usage
 
       fr24key="0123456789abcdef"
 
-* Optionally, edit dump1090/config.js to set the correct coordinates of the
-receiver.
+* Edit dump1090/config.js to set the correct coordinates of the receiver.
 
       DefaultCenterLat = 66.5;
       DefaultCenterLon = 25.19;
@@ -25,21 +24,21 @@ receiver.
       SiteLon     = 25.19;
       SiteName    = "My receiver";
 
-* Optionally, edit dump1090/supervisord.conf to set the correct coordinates of
-the receiver in dump1090-fa's arguments (`--lat` and `--lon`).
+* Edit dump1090/supervisord.conf to set the correct coordinates of the receiver
+in dump1090-fa's arguments (`--lat` and `--lon`).
 
       command=/usr/bin/dump1090-fa ... --lat 66.5 --lon 25.19 ...
 
 Start the containers using
 
-    make pull && make up
+    docker-compose up -d
 
 You can now access the interactive map at http://127.0.0.1:8080/dump1090-fa/
 and the fr24feed web interface at http://127.0.0.1:8754/.
 
 Stop the containers using
 
-    make down
+    docker-compose down
 
 DVB-T dongles
 -------------
@@ -63,14 +62,9 @@ in dump1090 container output if your dongle isn't supported.
 Development
 -----------
 
-TL;DR: build Docker images using
-
-    make
-
 ### Dependencies
 
 * Docker with BuildKit support (18.09 or higher),
-* Compose with BuildKit support for `compose/build` (1.25.0 or higher).
 
 ### Multiarch
 
