@@ -27,54 +27,10 @@ endif
 		| docker login --username '$(call escape,$(DOCKER_USERNAME))' --password-stdin
 
 .PHONY: build
-# Build natively by default.
-build: compose/build
-
-.PHONY: clean
-clean:
-	docker system prune --all --force --volumes
+build: buildx/build
 
 .PHONY: push
-# Push multi-arch images by default.
 push: buildx/push
-
-.PHONY: pull
-pull:
-	docker-compose pull
-
-.PHONY: up
-up:
-	docker-compose up -d
-
-.PHONY: down
-down:
-	docker-compose down --volumes
-
-.PHONY: check-build
-check-build:
-ifndef FORCE
-	$(warning Going to build natively; consider `docker buildx build` instead)
-endif
-
-.PHONY: check-push
-check-push:
-ifndef FORCE
-	$(error Please use `docker buildx build --push` instead)
-endif
-
-.PHONY: compose/build
-# `docker-compose build` has week support for multiarch repos (you need to use
-# multiple Dockerfile's, create a manifest manually, etc.), so it's only here
-# for testing purposes, and native builds.
-compose/build: check-build
-	docker-compose build --progress plain
-
-.PHONY: compose/push
-# `docker-compose push` would replace the multiarch repo with a single image by
-# default (you'd have to create a manifest and push it instead), so it's only
-# here for testing purposes.
-compose/push: check-push compose/build
-	docker-compose push
 
 .PHONY: buildx/create
 buildx/create:
