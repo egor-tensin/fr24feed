@@ -6,35 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  compose:
-    runs-on: ubuntu-latest
-    name: Build / docker-compose
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Build w/ docker-compose
-        run: make compose/build
-
-  buildx:
-    runs-on: ubuntu-latest
-    name: Build / docker buildx
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Build w/ docker buildx
-        run: |
-          make buildx/create
-          make buildx/build
-          make buildx/rm
-
   publish:
-    needs: [compose, buildx]
     strategy:
       matrix:
         project: [dump1090, fr24feed]
     runs-on: ubuntu-latest
     name: 'Publish / ${{ matrix.project }}'
-    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,11 +24,20 @@ jobs:
         with:
           username: '${{ secrets.DOCKERHUB_USERNAME }}'
           password: '${{ secrets.DOCKERHUB_TOKEN }}'
+      - id: platforms
+        name: Which platforms?
+        # Building for all platforms for every commit is too time-consuming.
+        run: |
+          if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+              echo 'platforms=i386,amd64,arm64' >> "$GITHUB_OUTPUT"
+          else
+              echo 'platforms=amd64' >> "$GITHUB_OUTPUT"
+          fi
       - name: 'Publish ${{ matrix.project }}'
         uses: docker/build-push-action@v5
         with:
           context: '${{ matrix.project }}'
           file: '${{ matrix.project }}/Dockerfile'
-          platforms: i386,amd64,arm64
-          push: true
+          platforms: '${{ steps.platforms.outputs.platforms }}'
+          push: ${{ github.ref == 'refs/heads/master' }}
           tags: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.project }}:latest'
