@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   dump1090:
     build: ./dump1090

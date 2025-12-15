@@ -31,14 +31,14 @@ in dump1090-fa's arguments (`--lat` and `--lon`).
 
 Start the containers using
 
-    docker-compose up -d
+    docker compose up -d
 
 You can now access the interactive map at http://127.0.0.1:8080/dump1090-fa/
 and the fr24feed web interface at http://127.0.0.1:8754/.
 
 Stop the containers using
 
-    docker-compose down
+    docker compose down
 
 DVB-T dongles
 -------------
