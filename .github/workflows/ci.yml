@@ -33,7 +33,7 @@ jobs:
               echo 'platforms=amd64' >> "$GITHUB_OUTPUT"
           fi
       - name: 'Publish ${{ matrix.project }}'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: '${{ matrix.project }}'
           file: '${{ matrix.project }}/Dockerfile'
