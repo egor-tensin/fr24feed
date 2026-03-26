@@ -23,7 +23,7 @@ RUN tar xzf "dump1090-$DUMP1090_VERSION.tar.gz" && \
 
 FROM debian:bullseye-slim
 
-LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+LABEL maintainer="Egor Tensin <egor@tensin.name>"
 
 WORKDIR /tmp
 

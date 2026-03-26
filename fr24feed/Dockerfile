@@ -37,7 +37,7 @@ RUN tar xzf "$fr24feed_archive_name"
 
 FROM env-$TARGETARCH
 
-LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+LABEL maintainer="Egor Tensin <egor@tensin.name>"
 
 ENV fr24feed_directory="fr24feed_${fr24feed_archive_suffix}"
 
