@@ -40,6 +40,22 @@ Stop the containers using
 
     docker compose down
 
+Signup
+------
+
+If you need to configure your feed for the first time, run
+
+    docker run -it --rm egortensin/fr24feed bash
+
+Inside the container:
+
+    rm /etc/fr24feed.ini
+    # ^^^ Otherwise, the next command might fail with an SSL connection error
+    ./fr24feed --signup
+
+Then follow the instructions and update your fr24feed.ini with your new sharing
+key.
+
 DVB-T dongles
 -------------
 
