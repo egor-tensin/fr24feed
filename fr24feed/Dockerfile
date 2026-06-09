@@ -11,20 +11,20 @@ FROM debian:bullseye-slim AS base
 #
 #     https://www.flightradar24.com/share-your-data
 #
-# as of 2024-12-19.
+# as of 2026-06-09.
 FROM base AS env-386
 ENV fr24feed_directory=linux_binaries
-ENV fr24feed_version=1.0.54-0
+ENV fr24feed_version=1.0.56-1
 ENV fr24feed_archive_suffix=i386
 
 FROM base AS env-amd64
 ENV fr24feed_directory=linux_binaries
-ENV fr24feed_version=1.0.54-0
+ENV fr24feed_version=1.0.56-1
 ENV fr24feed_archive_suffix=amd64
 
 FROM base AS env-arm64
 ENV fr24feed_directory=rpi_binaries
-ENV fr24feed_version=1.0.54-0
+ENV fr24feed_version=1.0.57-1
 ENV fr24feed_archive_suffix=arm64
 
 ARG TARGETARCH
