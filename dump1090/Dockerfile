@@ -1,12 +1,14 @@
-FROM debian:bullseye-slim AS builder
+FROM debian:trixie-slim AS base
+
+FROM base AS builder
 
 # Variables:
-ARG DUMP1090_VERSION=7.2
+ARG DUMP1090_VERSION=11.0
 
 WORKDIR /tmp
 
     # dump1090 build dependencies (from README at https://github.com/flightaware/dump1090/blob/v7.2/README.md):
-RUN build_deps='build-essential fakeroot debhelper librtlsdr-dev pkg-config libncurses5-dev libbladerf-dev libhackrf-dev liblimesuite-dev' && \
+RUN build_deps='build-essential fakeroot debhelper librtlsdr-dev pkg-config libncurses5-dev libbladerf-dev libhackrf-dev liblimesuite-dev libsoapysdr-dev devscripts' && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
         apt-get install -y --no-install-recommends $build_deps
@@ -19,9 +21,9 @@ RUN tar xzf "dump1090-$DUMP1090_VERSION.tar.gz" && \
     cd package-bullseye && \
     dpkg-buildpackage -b --no-sign && \
     dump1090_arch="$( dpkg --print-architecture )" && \
-    cp -- "../dump1090-fa_${DUMP1090_VERSION}_${dump1090_arch}.deb" /tmp/dump1090-fa.deb
+    cp -- ../dump1090-fa_${DUMP1090_VERSION}*_${dump1090_arch}.deb /tmp/dump1090-fa.deb
 
-FROM debian:bullseye-slim
+FROM base
 
 LABEL maintainer="Egor Tensin <egor@tensin.name>"
 
