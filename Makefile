@@ -1,8 +1,5 @@
 include prelude.mk
 
-.PHONY: DO
-DO:
-
 PROJECT := fr24feed
 # Target platforms (used by buildx):
 PLATFORMS := i386,amd64,arm64
